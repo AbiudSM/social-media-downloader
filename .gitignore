@@ -1,0 +1,46 @@
+# Local Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Builds and test output
+/build/
+/dist/
+/.verification/
+/downloader-test-*/
+
+# Downloaded media and yt-dlp partial files
+/downloads/
+/Downloads/
+*.mp3
+*.mp4
+*.m4a
+*.webm
+*.mkv
+*.part
+*.part-Frag*
+*.ytdl
+
+# Local cookies, configuration and credentials
+*cookies*.txt
+*cookies*.json
+.env
+.env.*
+!.env.example
+yt-dlp.conf
+yt-dlp.conf.txt
+*.pem
+*.key
+
+# Local editor and OS files
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store
