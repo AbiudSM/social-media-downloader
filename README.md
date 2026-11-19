@@ -5,7 +5,8 @@ Facebook, Instagram, or TikTok as **MP4** or **MP3**.
 
 ## Install on Windows x64
 
-Open **`Downloader-Setup-1.0.0-x64.exe`** and follow the setup wizard. Setup
+[Download the Windows x64 installer](https://github.com/AbiudSM/social-media-downloader/releases/download/v1.0.0/Downloader-Setup-1.0.0-x64.exe),
+then open `Downloader-Setup-1.0.0-x64.exe` and follow the setup wizard. Setup
 works offline, includes all runtime dependencies, and installs for the current
 user without administrator permissions. You can open Downloader when setup
 finishes or find it in the Start menu. The wizard also offers an optional
@@ -90,8 +91,18 @@ $env:ISCC = 'C:\Path\To\Inno Setup 6\ISCC.exe'
 
 The single-file installer is generated at `dist/Downloader-Setup-1.0.0-x64.exe`.
 The installer is unsigned, so Windows may show a SmartScreen warning if it was
-downloaded from the internet. Before publishing it, review the distribution
-requirements for the bundled components in [THIRD_PARTY.md](THIRD_PARTY.md).
+downloaded from the internet.
+
+For the public installer, use the FFmpeg build described in [THIRD_PARTY.md](THIRD_PARTY.md).
+After creating the Python environment, use the locked dependencies and point
+PyInstaller to the `local` directory produced by the FFmpeg build.
+
+```powershell
+$env:DOWNLOADER_FFMPEG_BUILD = 'C:\Path\To\Downloader-FFmpeg-Source-1.0.0\local'
+python -m pip --python .venv/Scripts/python.exe install -r requirements-lock.txt
+.venv/Scripts/python.exe -m PyInstaller --noconfirm --clean Downloader.spec
+.\BuildInstaller.cmd
+```
 
 ## Run tests
 

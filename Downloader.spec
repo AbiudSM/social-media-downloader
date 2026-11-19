@@ -2,6 +2,7 @@
 # the worker has redirected standard streams and is started with CREATE_NO_WINDOW.
 from pathlib import Path
 import importlib.metadata
+import os
 import shutil
 import sys
 
@@ -29,11 +30,22 @@ elif Path(runtime).stem.lower() == 'node':
 python_license = Path(sys.base_prefix) / 'LICENSE.txt'
 if python_license.is_file():
     datas.append((str(python_license), 'licenses/python'))
-datas += [(str(root / 'README.md'), '.'), (str(root / 'THIRD_PARTY.md'), '.')]
+datas += [(str(root / filename), '.') for filename in ['README.md', 'THIRD_PARTY.md', 'LICENSE']]
+
+ffmpeg_build = os.environ.get('DOWNLOADER_FFMPEG_BUILD')
+if ffmpeg_build:
+    ffmpeg_dir = Path(ffmpeg_build).resolve()
+    ffmpeg_binary = ffmpeg_dir / 'bin' / 'ffmpeg.exe'
+    ffmpeg_licenses = ffmpeg_dir / 'licenses'
+    if not ffmpeg_binary.is_file() or not ffmpeg_licenses.is_dir():
+        raise RuntimeError('DOWNLOADER_FFMPEG_BUILD must contain bin/ffmpeg.exe and licenses/.')
+    datas.append((str(ffmpeg_licenses), 'licenses/ffmpeg'))
+else:
+    ffmpeg_binary = imageio_ffmpeg.get_ffmpeg_exe()
 
 a = Analysis(
     ['app.py'], pathex=[str(root)],
-    binaries=[(imageio_ffmpeg.get_ffmpeg_exe(), 'tools'), (runtime, 'runtime')],
+    binaries=[(str(ffmpeg_binary), 'tools'), (runtime, 'runtime')],
     datas=datas,
     hiddenimports=collect_submodules('yt_dlp') + ['yt_dlp_ejs', 'certifi'],
     hookspath=[], hooksconfig={}, runtime_hooks=[], excludes=[], noarchive=False,

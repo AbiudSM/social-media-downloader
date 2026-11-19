@@ -59,7 +59,7 @@ class MediaIntegrationTests(unittest.TestCase):
         cls.ffmpeg = ffmpeg_executable()
         commands = [
             ["-f", "lavfi", "-i", "color=c=0x6251DF:s=160x90:r=10", "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=44100",
-             "-t", "1", "-c:v", "libvpx-vp9", "-c:a", "libopus", str(cls.root / "sample.webm")],
+             "-t", "1", "-c:v", "mpeg4", "-c:a", "pcm_s16le", str(cls.root / "sample.mkv")],
             ["-f", "lavfi", "-i", "color=c=0x6251DF:s=160x90:r=10", "-t", "1", "-c:v", "libx264", "-an", str(cls.root / "video.mp4")],
             ["-f", "lavfi", "-i", "sine=frequency=440:sample_rate=44100", "-t", "1", "-c:a", "aac", str(cls.root / "audio.m4a")],
         ]
@@ -85,7 +85,7 @@ class MediaIntegrationTests(unittest.TestCase):
             if info:
                 downloader.process_ie_result(info, download=True)
             else:
-                downloader.extract_info(self.base + "/sample.webm", download=True)
+                downloader.extract_info(self.base + "/sample.mkv", download=True)
         files = [Path(e["path"]) for e in events if e["type"] == "file"]
         self.assertEqual(len(files), 1, events)
         self.assertTrue(files[0].is_file())
